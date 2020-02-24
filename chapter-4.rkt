@@ -225,6 +225,6 @@
       (else
         (cons (car lat) (rempick2 sub1(n) (cdr lat)))))))
 
-(rempick 3 (list 1 2 3)); '(1 2)
-(rempick 2 (list "black" "green" "white" "red")); '("black" "white" "red")
+(rempick2 3 (list 1 2 3)); '(1 2)
+(rempick2 2 (list "black" "green" "white" "red")); '("black" "white" "red")
 
