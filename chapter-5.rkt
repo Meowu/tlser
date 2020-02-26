@@ -195,16 +195,13 @@
 
 (define leftmost
   (lambda (l)
-    ;(display l) (newline)
     (cond
-      ; ((null? l) #f)
-      ((atom? l) l)
+      ;((null? ) #f)
+      ((atom? (car l)) (car l))
      (else
-      (display l) (newline)
       (leftmost (car l))))))
 
-;(leftmost insertl)
+(leftmost insertl)
 (leftmost '("banana" "pear"))
-(leftmost '('("apple") "orange"))
-;; (leftmost '())
-;(car '("apple"))
+(leftmost (list '("apple") "orange")) ; we cannot use ' to create outer most list.
+(leftmost '()) ; error.
