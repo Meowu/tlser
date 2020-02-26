@@ -165,7 +165,7 @@
          ((eq? old (car lat))
           (cons new (cons old (insertL* new old (cdr lat)))))
          (else
-          (cons old (insertL* new old (cdr lat))))))
+          (cons (car lat) (insertL* new old (cdr lat))))))
       (else
        (cons (insertL* new old (car lat)) (insertL* new old (cdr lat)))))))
 
@@ -178,4 +178,33 @@
 
 (insertL* "apple" "banana" insertl)
 
+(define member*
+  (lambda (a lat)
+    (cond
+      ((null? lat) #f)
+      ((atom? (car lat))
+       (or (eq? (car lat) a)
+           (member* a (cdr lat))))
+      (else
+       (or (member* a (car lat)) (member* a (cdr lat)))))))
 
+(member* "brean" insertl)
+(member* "brandy" insertl)
+(member* "peach" insertl)
+(member* "banana" insertl)
+
+(define leftmost
+  (lambda (l)
+    ;(display l) (newline)
+    (cond
+      ; ((null? l) #f)
+      ((atom? l) l)
+     (else
+      (display l) (newline)
+      (leftmost (car l))))))
+
+;(leftmost insertl)
+(leftmost '("banana" "pear"))
+(leftmost '('("apple") "orange"))
+;; (leftmost '())
+;(car '("apple"))
