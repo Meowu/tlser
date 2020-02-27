@@ -204,4 +204,61 @@
 (leftmost insertl)
 (leftmost '("banana" "pear"))
 (leftmost (list '("apple") "orange")) ; we cannot use ' to create outer most list.
-(leftmost '()) ; error.
+; (leftmost '()) ; error.
+
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+      ((and (null? l1) (null? l2)) #t)
+      ((or (null? l1) (null? l2)) #f)
+      ((and (atom? l1) (atom? l2)) (eqan? l1 l2))
+      ((or (atom? l1) (atom? l2)) #f)
+    (else
+     (and (eqlist? (car l1) (car l2)) (eqlist? (cdr l1) (cdr l2)))))))
+
+(display "test -> eqlist") (newline)
+(eqlist? '() '()) ;; #t
+(eqlist? '() '("queen")) ;; #f
+(eqlist? (list "strawberry" "ice" "cream")  (list "strawberry" "ice" "cream")) ;; #t
+(eqlist? (list "strawberry" "cream" "ice")  (list "strawberry" "ice" "cream")) ;; #f
+(eqlist? (list "banana" (list (list "split"))) (list (list "bananan") (list "split"))) ;; #f
+(eqlist? (list "beef" (list (list "sausage")) (list "and" (list "soda")))
+        (list "beef" (list (list "salami")) (list "and" (list "soda")))) ;; #f
+(eqlist? (list "beef" (list (list "sausage")) (list "and" (list "soda")))
+        (list "beef" (list (list "sausage")) (list "and" (list "soda")))) ;; #t
+
+;; An S-expression is either an atom or a (possibly empty) list of S-expressions.
+
+(define equal?
+  (lambda (a b)
+    (cond
+      ((and (atom? a) (atom? b)) (eqan? a b))
+      ((or (atom? a) (atom? b)) #f)
+     (else
+      (eqlist? a b)))))
+(display "test -> equal?") (newline)
+(equal? 1 2) ;; #f
+(equal? 1 1) ;; #t
+(equal? '() '()) ;; #t
+(equal? '("a") '("a")) ;; #t
+(equal? "a" '("a")) ;; #f
+
+(define eqlist2?
+  (lambda (l1 l2)
+    (cond
+      ((and (null? l1) (null? l2)) #t)
+      ((or (null? l1) (null? l2)) #f)
+      (else
+       (and (equal? (car l1) (car l2))
+            (eqlist2? (cdr l1) (cdr l2)))))))
+
+;; now it removes the first matching S-expression s in l, instead of the first matching atom a in lat.
+(define rember
+  (lambda (s l)
+    (cond
+      ((null? l) (quote()))
+      (else
+       (cond
+         ((equal? (car l) s) (cdr l))
+         (else
+          (cons (car l) (rember s (car l)))))))))
