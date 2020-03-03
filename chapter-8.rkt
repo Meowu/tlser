@@ -11,6 +11,54 @@
     ((or (number? a1) (number? a2)) #f)
     (else (eq? a1 a2)))))
 
+(define **
+  (lambda (n m)
+    (cond 
+      ((zero? m) 1)
+      (else 
+        (x n (** n (sub1 m)))))))
+
+(define x
+  (lambda (n m)
+    (cond
+      ((zero? m) 0)
+      (else 
+        (add n (x n (sub1 m)))))))
+
+(define add1
+  (lambda (n)
+    (+ n 1)))
+
+(define sub1
+  (lambda (n)
+    (- n 1)))
+
+(define sub
+  (lambda (n m)
+    (cond 
+      ((zero? m) n)
+      (else
+        (sub1 (sub n (sub1 m)))))))
+
+(define add
+  (lambda (n m)
+    (cond 
+      ((zero? m) n)
+      (else 
+        (add1 (add n (sub1 m)))))))
+
+(define operator
+  (lambda (aexp)
+    (car aexp)))
+
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car (cdr aexp))))
+
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
 (define multirember
   (lambda (a lat)
     (cond
@@ -132,3 +180,23 @@
     (cons new l)))
 
 (define subst (insert-g seqS))
+
+(define atom-to-function
+  (lambda (x)
+    (cond
+      ((eq? x (quote +)) add)
+      ((eq? x (quote x)) x)
+      (else **))))
+
+(atom-to-function (operator '(+ 5 3))) ;; func: add
+
+(define value
+  (lambda (nexp)
+    (cond
+      ((atom? nexp) nexp)
+      (else
+      ((atom-to-function (operator nexp))
+       (value (1st-sub-exp nexp))
+       (value (2nd-sub-exp nexp)))))))
+
+
