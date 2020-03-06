@@ -199,4 +199,36 @@
        (value (1st-sub-exp nexp))
        (value (2nd-sub-exp nexp)))))))
 
+(define mutiLat (list "shrimp" "salad" "tuna" "salad" "and" "tuna"))
+
+(define multirember-f
+  (lambda (test?)
+    (lambda (a lat)
+      (cond
+        ((null? lat) (quote()))
+        ((test? (car lat) a)
+         ((multirember-f test?) a (cdr lat)))
+        (else
+         (cons (car lat)
+               ((multirember-f test?) a
+                                      (cdr lat))))))))
+
+((multirember-f eq?) "tuna" mutiLat)
+
+(define eq?-tuna
+  (eq?-c "tuna"))
+
+(eq?-tuna "tuna")
+
+(define multiremberT
+  (lambda (test? lat)
+    (cond
+      ((null? lat) (quote()))
+      ((test? (car lat))
+       (multiremberT test? (cdr lat)))
+      (else
+       (cons (car lat)
+             (multiremberT test? (cdr lat)))))))
+
+(multiremberT eq?-tuna mutiLat)
 
