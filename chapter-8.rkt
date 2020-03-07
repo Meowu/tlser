@@ -232,3 +232,8 @@
 
 (multiremberT eq?-tuna mutiLat)
 
+(define a-friend
+  (lambda (x y)
+    (null? y)))
+
+
