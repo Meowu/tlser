@@ -51,6 +51,13 @@
   (lambda (aexp)
     (car aexp)))
 
+(define length
+  (lambda (lat)
+    (cond
+      ((null? lat) 0)
+      (else
+        (add1 (length (cdr lat)))))))
+
 (define 1st-sub-exp
   (lambda (aexp)
     (car (cdr aexp))))
@@ -236,4 +243,102 @@
   (lambda (x y)
     (null? y)))
 
+(define new-friend
+  (lambda (newlat seen)
+    (a-friend newlat
+         (cons (quote tuna) seen))))
 
+(define latest-friend
+  (lambda (newlat seen)
+    (a-friend (cons (quote tuna) newlat) seen)))
+
+(quote tuna)
+(cons (quote shrimp) (quote tuna))
+
+(define last-friend
+  (lambda (x y)
+    (length y)))
+
+(define multirember&co
+  (lambda (a lat col)
+    (cond
+     ((null? lat)
+      (col (quote()) (quote())))
+     ((eq? (car lat) a)
+      (multirember&co a
+           (cdr lat)
+           (lambda (newlat seen)
+             (col newlat (cons (car lat) seen)))))
+     (else
+      (multirember&co a
+                      (cdr lat)
+                      (lambda (newlat seen)
+                        (col (cons (car lat) newlat)
+                             seen)))))))
+
+(multirember&co "tuna" '() a-friend)
+(multirember&co "salad" mutiLat last-friend)
+
+(define multiinsertLR
+  (lambda (new oldL oldR lat)
+    (cond
+      ((null? lat) (quote()))
+      ((eq? oldL (car lat))
+       (cons new (cons oldL
+                       (multiinsertLR new oldL oldR (cdr lat)))))
+      ((eq? oldR (car lat))
+       (cons oldR (const new (multiinsertLR new oldL oldR (cdr lat)))))
+      (else
+       (cons (car lat) (multiinsertLR new oldL oldR (cdr lat)))))))
+
+(define multiinsertLR&co
+  (lambda (new oldL oldR lat col)
+    (cond
+      ((null? lat)
+       (col (quote()) 0 0))
+      ((eq? (car lat) oldL)
+       (multiinsertLR&co new oldL oldR (cdr lat)
+                       (lambda (newlat lInsert rInsert)
+                         (col (cons new (cons oldL newlat))
+                              (add1 lInsert) rInsert))))
+      ((eq? (car lat) oldR)
+       (multiinsertLR&co new oldL oldR (cdr lat)
+                       (lambda (newlat lInsert rInsert)
+                         (col (cons oldR (cons new newlat))
+                              lInsert (add1 rInsert)))))
+      (else
+       (multiinsertLR&co new oldL oldR (cdr lat)
+                       (lambda (newlat lInsert rInsert)
+                         (col (cons (car lat) newlat)
+                              lInsert rInsert)))))))
+(define countInsert
+  (lambda (lat L R)
+    (display R)
+    (newline)))
+
+(define food (list "chips" "and" "fish" "or" "fish" "and" "chips"))
+(multiinsertLR&co "sailty" "fish" "chips" food countInsert)
+
+(define even?
+  (lambda (n)
+    (= (x (/ n 2) 2))))
+
+(even? 4)
+
+(define evens-only*
+  (lambda (l)
+    (cond
+      ((null? l) (quote()))
+      ((atom? (car l))
+       (cond
+         ((even? (car l))
+          (cons (car l)
+                (evens-only* (cdr l))))
+         (else
+          (evens-only* (cdr l)))))
+      (else
+       (cons (evens-only* (car l))
+             (evens-only* (cdr l)))))))
+
+(evens-only* '(1 2))
+      
