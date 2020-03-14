@@ -16,14 +16,7 @@
     (cond 
       ((zero? m) 1)
       (else 
-        (x n (** n (sub1 m)))))))
-
-(define x
-  (lambda (n m)
-    (cond
-      ((zero? m) 0)
-      (else 
-        (add n (x n (sub1 m)))))))
+        (* n (** n (sub1 m)))))))
 
 (define add1
   (lambda (n)
@@ -32,6 +25,39 @@
 (define sub1
   (lambda (n)
     (- n 1)))
+
+(define > 
+  (lambda (n m)
+    (cond
+     ; we should evaluate n first, so the program works while n == m, which returns #f;
+      ((zero? n) #f) 
+      ((zero? m) #t)
+      (else 
+        (> (sub1 n) (sub1 m))))))
+
+(define <
+  (lambda (n m)
+    (cond
+      ((zero? m) #f)
+      ((zero? n) #t)
+      (else 
+        (< (sub1 n) (sub1 m))))))
+
+(define =
+  (lambda (n m)
+    (cond
+      ((> n m) #f)
+      ((< n m) #f)
+      (else #t))))
+
+;; multiple function below only works with int.
+(define x
+  (lambda (n m)
+    (cond
+      ((zero? m) 0)
+      (else 
+        (add n (x n (sub1 m)))))))
+
 
 (define sub
   (lambda (n m)
@@ -46,6 +72,13 @@
       ((zero? m) n)
       (else 
         (add1 (add n (sub1 m)))))))
+
+(define divide
+  (lambda (n m)
+    (cond 
+      ((< n m) 0)
+      (else
+        (add1 (divide (sub n m) m))))))
 
 (define operator
   (lambda (aexp)
@@ -321,9 +354,10 @@
 
 (define even?
   (lambda (n)
-    (= (x (/ n 2) 2))))
+    (= (x (divide n 2) 2) n)))
 
 (even? 4)
+(even? 3)
 
 (define evens-only*
   (lambda (l)
@@ -331,7 +365,8 @@
       ((null? l) (quote()))
       ((atom? (car l))
        (cond
-         ((even? (car l))
+         (
+          (even? (car l))
           (cons (car l)
                 (evens-only* (cdr l))))
          (else
@@ -340,5 +375,5 @@
        (cons (evens-only* (car l))
              (evens-only* (cdr l)))))))
 
-(evens-only* '(1 2))
-      
+(evens-only* '(4 2))
+(evens-only* '((9 1 2 8) 3 10 ((9 9) 7 6) 2))
