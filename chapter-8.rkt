@@ -377,3 +377,41 @@
 
 (evens-only* '(4 2))
 (evens-only* '((9 1 2 8) 3 10 ((9 9) 7 6) 2))
+
+(define the-last-friend
+  (lambda (newl product sum)
+    (cons sum
+     (cons product
+           newl))))
+
+(define evens-only*&co
+  (lambda (l col)
+    (cond
+      ((null? l)
+       (col (quote()) 1 0))
+      ((atom? (car l))
+       (cond
+         ((even? (car l))
+          (evens-only*&co (cdr l)
+             (lambda (newl p s)
+                (col (cons (car l) newl)
+                     (x (car l) p) s))))
+         (else
+          (evens-only*&co (cdr l)
+             (lambda (newl p s)
+               (col newl p
+                    (+ (car l) s)))))))
+      (else
+       (evens-only*&co (car l)
+          (lambda (al ap as)
+            (evens-only*&co (cdr l)
+              (lambda (dl dp ds)
+                (col (cons al dl)
+                     (x ap dp)
+                     (add as ds))))))))))
+
+
+(define even-odd-list '((9 1 2 8) 3 10 ((9 9) 7 6) 2))
+(display even-odd-list) (newline)
+(evens-only*&co even-odd-list the-last-friend)
+       
