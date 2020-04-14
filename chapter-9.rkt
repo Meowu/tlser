@@ -51,6 +51,14 @@
           (tup+ (cdr tup1) (cdr tup2)))))))
 
 
+(define first
+  (lambda (p)
+    (car p)))
+
+(define second
+  (lambda (p)
+    (car (cdr p))))
+
 (define > 
   (lambda (n m)
     (cond
@@ -85,12 +93,25 @@
       (else 
         (equal (sub1 n) (sub1 m))))))
 
+(define build
+  (lambda (s1 s2)
+    (cons s1 (cons s2 null))))
+
 (define **
   (lambda (n m)
     (cond 
       ((zero? m) 1)
       (else 
         (x n (** n (sub1 m)))))))
+
+(define a-pair?
+  (lambda (x)
+    (cond
+      ((atom? x) #f)
+      ((null? x) #f)
+      ((null? (cdr x)) #f)
+      (else
+       (null? (cdr (cdr x)))))))
 
 
 (define divide
@@ -122,3 +143,19 @@
 
 (define look-list '(6 2 4 "caviar" 5 7 3))
 (looking "caviar" look-list)
+
+(define externity
+  (lambda (x)
+    (externity x)))
+
+(define shift
+  (lambda (pair)
+    (build (first (first pair))
+       (build (second (first pair))
+              (second pair)))))
+
+(shift '((a b) c)) ;; 只是第一个是 pair，和第二部分组成一个新的 pair；
+(shift '((a b) (c d)))
+
+
+
