@@ -170,6 +170,16 @@
           (length* (second pora)))))))
 
 (length* '(a (b c)))
+(length* '((a b) (c d)))
 
+(define weight*
+  (lambda (pora)
+    (cond
+      ((atom? pora) 1)
+      (else
+       (add (x (weight* (first pora)) 2)
+            (weight* (second pora)))))))
 
+(weight* '((a b) c)) ;; (2 + 1) x 2 + 1
+(weight* '(a (b c))) ;; (2 + (2 + 1))
 
